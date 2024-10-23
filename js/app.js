@@ -31,7 +31,7 @@ const locations = [
   {
     name: "cave",
     "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
-    "button  functions": [fightSlime, fightBeast, goTown],
+    "button functions": [fightSlime, fightBeast, goTown],
     text: "You entered the cave. You see some monsters."
   }
 ]
@@ -56,19 +56,28 @@ const weapons = [
 ]
 
 /*  INITIAL BUTTON EVENT LISTENERS  */
-button1.addEventListener("click", goStore);
-button2.addEventListener("click", goCave);
-button3.addEventListener("click", fightDragon);
+// button1.addEventListener("click", goStore);
+// button2.addEventListener("click", goCave);
+// button3.addEventListener("click", fightDragon);
+
+button1.onclick = goStore;
+button2.onclick = goCave;
+button3.onclick = fightDragon;
 
 function update(location) {
-  text.innerText = location.text;
+
   button1.innerText = location["button text"][0];
   button2.innerText = location["button text"][1];
   button3.innerHTML = location["button text"][2];
 
-  button1.addEventListener("click", location["button functions"][0]);
-  button2.addEventListener("click", location["button functions"][1]);
-  button3.addEventListener("click", location["button functions"][2]);
+  button1.onclick = location["button functions"][0];
+  button2.onclick = location["button functions"][1];
+  button3.onclick = location["button functions"][2];
+
+  text.innerText = location.text;
+  // button1.addEventListener("click", location["button functions"][0]);
+  // button2.addEventListener("click", location["button functions"][1]);
+  // button3.addEventListener("click", location["button functions"][2]);
 }
 
 function goTown() {
