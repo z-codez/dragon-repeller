@@ -2,10 +2,9 @@ let xp = 0;
 let gold = 50;
 let health = 100;
 let currentWeaponIndex = 0;
-let fighting;
-let monsterHealth;
 let inventory = ["stick"];
-
+let currentMonster;
+let currentMonsterHealth;
 
 /*  Variables Initializations     */
 const button1 = document.querySelector("#button1");
@@ -14,9 +13,21 @@ const button3 = document.querySelector("#button3");
 const text = document.querySelector("#text");
 const goldText = document.querySelector("#goldText");
 const healthText = document.querySelector("#healthText");
+const monsterStats = document.querySelector("#monsterStats");
+const monsterName = document.querySelector("#monsterName");
+const monsterHealth = document.querySelector("#monsterHealth");
 
 function attack() {
+  text.innerText = "The " + monsterName.innerText + " attacks";
+  const currentWeapon = weapons[currentWeaponIndex];
+  console.log("Current weapon is " + currentWeapon.name);
+  text.innerText += ", You attack it with your " + currentWeapon.name;
 
+  health -= currentMonster.level;
+  healthText.innerText = health;
+
+  currentMonsterHealth -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
+  monsterHealth.innerText = currentMonsterHealth;
 }
 
 function dodge() {
@@ -82,7 +93,7 @@ const monsters = [
   {
     name: "dragon",
     level: 20,
-    health: 60
+    health: 300
   }
 ];
 
@@ -182,26 +193,41 @@ function inventoryFormatter() {
   }
 }
 
-function goFight() {
+function lose() {
+
+}
+
+let defeatMonster = () => {
+
+};
+
+function goFight(index) {
   update(locations[3]);
-  monsterHealth = monsters[fighting].health;
-  const monsterStats = document.querySelector("#monsterStats");
+  currentMonster = monsters[index];
+  currentMonsterHealth = currentMonster.health;
+
   monsterStats.style.display = "block";
+
+  monsterHealth.innerText = currentMonster.health;
+  monsterName.innerText = currentMonster.name;
+
+  if (health <= 0) {
+    lose();
+  } else if (currentMonsterHealth <= 0) {
+    defeatMonster();
+  }
 }
 
 function fightDragon() {
-  fighting = 2;
-  goFight();
+  goFight(2);
 }
 
 
 function fightSlime() {
-  fighting = 0;
-  goFight();
+  goFight(0);
 }
 
 function fightBeast() {
-  fighting = 1;
-  goFight();
+  goFight(1);
 }
 
