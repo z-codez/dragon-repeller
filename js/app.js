@@ -15,6 +15,14 @@ const text = document.querySelector("#text");
 const goldText = document.querySelector("#goldText");
 const healthText = document.querySelector("#healthText");
 
+function attack() {
+
+}
+
+function dodge() {
+
+}
+
 const locations = [
   {
     name: "town square",
@@ -33,6 +41,12 @@ const locations = [
     "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
     "button functions": [fightSlime, fightBeast, goTown],
     text: "You entered the cave. You see some monsters."
+  },
+  {
+    name: "fight",
+    "button text": ["Attack", "Dodge", "Run"],
+    "button functions": [attack, dodge, goTown],
+    text: "You are fighting a monster."
   }
 ]
 
@@ -109,9 +123,6 @@ function goCave() {
   update(locations[2]);
 }
 
-function fightDragon() {
-  text.innerText = "Fighting dragon";
-}
 
 function buyHealth() {
   if(gold >= 10) {
@@ -124,8 +135,6 @@ function buyHealth() {
     text.innerText = "You do not have enough gold to buy health."
   }
 }
-
-
 
 function buyWeapon() {
   if(currentWeaponIndex < weapons.length - 1) {
@@ -173,6 +182,26 @@ function inventoryFormatter() {
   }
 }
 
-function fightSlime() {}
+function goFight() {
+  update(locations[3]);
+  monsterHealth = monsters[fighting].health;
+  const monsterStats = document.querySelector("#monsterStats");
+  monsterStats.style.display = "block";
+}
 
-function fightBeast() {}
+function fightDragon() {
+  fighting = 2;
+  goFight();
+}
+
+
+function fightSlime() {
+  fighting = 0;
+  goFight();
+}
+
+function fightBeast() {
+  fighting = 1;
+  goFight();
+}
+
