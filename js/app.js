@@ -11,6 +11,7 @@ const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
 const text = document.querySelector("#text");
+const xpText = document.querySelector("#xpText");
 const goldText = document.querySelector("#goldText");
 const healthText = document.querySelector("#healthText");
 const monsterStats = document.querySelector("#monsterStats");
@@ -28,10 +29,18 @@ function attack() {
 
   currentMonsterHealth -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
   monsterHealth.innerText = currentMonsterHealth;
+
+  if (health <= 0) {
+    lose();
+  } else if (currentMonsterHealth <= 0) {
+    defeatMonster();
+  }
+
+  //console.log(currentMonsterHealth);
 }
 
 function dodge() {
-
+  text.innerText = "You dodge the attack from the " + currentMonster.name;
 }
 
 const locations = [
@@ -58,6 +67,12 @@ const locations = [
     "button text": ["Attack", "Dodge", "Run"],
     "button functions": [attack, dodge, goTown],
     text: "You are fighting a monster."
+  },
+  {
+    name: "kill monster",
+    "button text": ["Go to town square", "Go to town square", "Go to town square"],
+    "button functions": [goTown, goTown, goTown],
+    text: "The monster screams \"Arg!\" as it dies. You gain experience points and find gold."
   }
 ]
 
@@ -107,11 +122,14 @@ button2.onclick = goCave;
 button3.onclick = fightDragon;
 
 function update(location) {
+  // This makes the monster stats disappear
+  monsterStats.style.display = "none";
 
   button1.innerText = location["button text"][0];
   button2.innerText = location["button text"][1];
   button3.innerHTML = location["button text"][2];
 
+  // I tried using addEventListeners, but I cannot get them to work properly
   button1.onclick = location["button functions"][0];
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
@@ -198,6 +216,13 @@ function lose() {
 }
 
 let defeatMonster = () => {
+  update(locations[4]);
+
+  xp += currentMonster.level;
+  gold += Math.floor(currentMonster.level * 6.7);
+
+  xpText.innerText = xp;
+  goldText.innerText = gold;
 
 };
 
@@ -210,12 +235,6 @@ function goFight(index) {
 
   monsterHealth.innerText = currentMonster.health;
   monsterName.innerText = currentMonster.name;
-
-  if (health <= 0) {
-    lose();
-  } else if (currentMonsterHealth <= 0) {
-    defeatMonster();
-  }
 }
 
 function fightDragon() {
