@@ -73,6 +73,12 @@ const locations = [
     "button text": ["Go to town square", "Go to town square", "Go to town square"],
     "button functions": [goTown, goTown, goTown],
     text: "The monster screams \"Arg!\" as it dies. You gain experience points and find gold."
+  },
+  {
+    name: "lose",
+    "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
+    "button functions": [restart, restart, restart],
+    text: "You die. &#x2620;"
   }
 ]
 
@@ -134,7 +140,7 @@ function update(location) {
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
 
-  text.innerText = location.text;
+  text.innerHTML = location.text;
   // button1.addEventListener("click", location["button functions"][0]);
   // button2.addEventListener("click", location["button functions"][1]);
   // button3.addEventListener("click", location["button functions"][2]);
@@ -212,6 +218,10 @@ function inventoryFormatter() {
 }
 
 function lose() {
+  update(locations[5]);
+}
+
+function restart() {
 
 }
 
