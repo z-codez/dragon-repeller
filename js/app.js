@@ -4,6 +4,7 @@ let health = 100;
 let currentWeaponIndex = 0;
 let inventory = ["stick"];
 let currentMonster;
+console.log(currentMonster);
 let currentMonsterHealth;
 
 /*  Variables Initializations     */
@@ -222,7 +223,15 @@ function lose() {
 }
 
 function restart() {
-
+  xp = 0;
+  xpText.innerText = xp;
+  health = 100;
+  healthText.innerText = health;
+  gold = 50;
+  goldText.innerText = gold;
+  currentWeaponIndex = 0;
+  inventory = ["stick"];
+  goTown();
 }
 
 let defeatMonster = () => {
