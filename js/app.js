@@ -4,8 +4,6 @@ let health = 100;
 let currentWeaponIndex = 0;
 let inventory = ["stick"];
 let currentMonster;
-console.log(currentMonster);
-let currentMonsterHealth;
 
 /*  Variables Initializations     */
 const button1 = document.querySelector("#button1");
@@ -19,30 +17,16 @@ const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealth = document.querySelector("#monsterHealth");
 
-function attack() {
-  text.innerText = "The " + monsterName.innerText + " attacks";
-  const currentWeapon = weapons[currentWeaponIndex];
-  console.log("Current weapon is " + currentWeapon.name);
-  text.innerText += ", You attack it with your " + currentWeapon.name;
+/*  INITIAL BUTTON EVENT LISTENERS  */
+// button1.addEventListener("click", goStore);
+// button2.addEventListener("click", goCave);
+// button3.addEventListener("click", fightDragon);
 
-  health -= currentMonster.level;
-  healthText.innerText = health;
+button1.onclick = goStore;
+button2.onclick = goCave;
+button3.onclick = fightDragon;
 
-  currentMonsterHealth -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
-  monsterHealth.innerText = currentMonsterHealth;
 
-  if (health <= 0) {
-    lose();
-  } else if (currentMonsterHealth <= 0) {
-    defeatMonster();
-  }
-
-  //console.log(currentMonsterHealth);
-}
-
-function dodge() {
-  text.innerText = "You dodge the attack from the " + currentMonster.name;
-}
 
 const locations = [
   {
@@ -80,6 +64,12 @@ const locations = [
     "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
     "button functions": [restart, restart, restart],
     text: "You die. &#x2620;"
+  },
+  {
+    name: "win",
+    "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
+    "button functions": [restart, restart, restart],
+    text: "You defeat the dragon! YOU WIN THE GAME! &#x1F389;"
   }
 ]
 
@@ -119,14 +109,17 @@ const monsters = [
   }
 ];
 
-/*  INITIAL BUTTON EVENT LISTENERS  */
-// button1.addEventListener("click", goStore);
-// button2.addEventListener("click", goCave);
-// button3.addEventListener("click", fightDragon);
+function goTown() {
+  update(locations[0]);
+}
 
-button1.onclick = goStore;
-button2.onclick = goCave;
-button3.onclick = fightDragon;
+function goStore() {
+  update(locations[1]);
+}
+
+function goCave() {
+  update(locations[2]);
+}
 
 function update(location) {
   // This makes the monster stats disappear
@@ -145,18 +138,6 @@ function update(location) {
   // button1.addEventListener("click", location["button functions"][0]);
   // button2.addEventListener("click", location["button functions"][1]);
   // button3.addEventListener("click", location["button functions"][2]);
-}
-
-function goTown() {
-  update(locations[0]);
-}
-
-function goStore() {
-  update(locations[1]);
-}
-
-function goCave() {
-  update(locations[2]);
 }
 
 
@@ -218,9 +199,6 @@ function inventoryFormatter() {
   }
 }
 
-function lose() {
-  update(locations[5]);
-}
 
 function restart() {
   xp = 0;
@@ -232,28 +210,6 @@ function restart() {
   currentWeaponIndex = 0;
   inventory = ["stick"];
   goTown();
-}
-
-let defeatMonster = () => {
-  update(locations[4]);
-
-  xp += currentMonster.level;
-  gold += Math.floor(currentMonster.level * 6.7);
-
-  xpText.innerText = xp;
-  goldText.innerText = gold;
-
-};
-
-function goFight(index) {
-  update(locations[3]);
-  currentMonster = monsters[index];
-  currentMonsterHealth = currentMonster.health;
-
-  monsterStats.style.display = "block";
-
-  monsterHealth.innerText = currentMonster.health;
-  monsterName.innerText = currentMonster.name;
 }
 
 function fightDragon() {
@@ -268,4 +224,71 @@ function fightSlime() {
 function fightBeast() {
   goFight(1);
 }
+
+function goFight(monsterIndex) {
+  update(locations[3]);
+  currentMonster = monsters[monsterIndex];
+
+  // IIFE(Immediately Invoked Function Expression)
+  (function(){
+    console.log(currentMonster);
+  })();
+  monsterStats.style.display = "block";
+  monsterHealth.innerText = currentMonster.health;
+  monsterName.innerText = currentMonster.name;
+}
+
+// Function declaration
+function attack() {
+  text.innerText = "The " + monsterName.innerText + " attacks";
+  const currentWeapon = weapons[currentWeaponIndex];
+  text.innerText += ", You attack it with your " + currentWeapon.name;
+
+  health -= currentMonster.level;
+  healthText.innerText = health;
+
+  currentMonster.health -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
+  monsterHealth.innerText = currentMonster.health;
+
+  if (health <= 0) {
+    lose();
+  } else if (currentMonster.health <= 0) {
+    if(currentMonster.name === "dragon") {
+      winGame();
+    } else {
+      defeatMonster();
+    }
+  }
+
+  //console.log(currentMonsterHealth);
+}
+
+function dodge() {
+  text.innerText = "You dodge the attack from the " + currentMonster.name;
+}
+
+function lose() {
+  update(locations[5]);
+}
+
+// Function expression
+const defeatMonster = function () {
+  update(locations[4]);
+
+  xp += currentMonster.level;
+  gold += Math.floor(currentMonster.level * 6.7);
+
+  xpText.innerText = xp;
+  goldText.innerText = gold;
+};
+
+// Arrow Function expression
+const winGame = ()  => {
+  update(locations[6]);
+};
+
+
+
+
+
 
