@@ -238,29 +238,49 @@ function goFight(monsterIndex) {
   monsterName.innerText = currentMonster.name;
 }
 
+function getMonsterAttackValue() {
+  const hit = (currentMonster.level * 5) - (Math.floor(Math.random() * xp));
+  return hit > 0 ? hit : currentMonster.level;
+}
+
+// Function to return true when health is less than 20 or random is less than 0.2
+function isMonsterHit() {
+  return Math.random() > .2 || health < 20;
+}
+
 // Function declaration
 function attack() {
   text.innerText = "The " + monsterName.innerText + " attacks";
   const currentWeapon = weapons[currentWeaponIndex];
-  text.innerText += ", You attack it with your " + currentWeapon.name;
+  text.innerText += ", You attack it with your " + currentWeapon.name + ".";
 
-  health -= currentMonster.level;
+  health -= getMonsterAttackValue();
+
+  let currentMonsterRemainingHealth = currentMonster.health;
+
+
+  if(isMonsterHit()) {
+    currentMonsterRemainingHealth -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
+  } else {
+    text.innerText += " You miss.";
+  }
+
+  // Display updated health values;
+  monsterHealth.innerText = currentMonsterRemainingHealth;
   healthText.innerText = health;
-
-  currentMonster.health -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
-  monsterHealth.innerText = currentMonster.health;
 
   if (health <= 0) {
     lose();
-  } else if (currentMonster.health <= 0) {
+  } else if (currentMonsterRemainingHealth <= 0) {
     if(currentMonster.name === "dragon") {
       winGame();
     } else {
       defeatMonster();
+      console.log("Defeated monster has a health of " + currentMonsterRemainingHealth);
     }
   }
 
-  //console.log(currentMonsterHealth);
+  //console.log(currentMonsterRemainingHealth);
 }
 
 function dodge() {
@@ -286,6 +306,7 @@ const defeatMonster = function () {
 const winGame = ()  => {
   update(locations[6]);
 };
+
 
 
 
