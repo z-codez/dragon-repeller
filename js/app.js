@@ -2,6 +2,7 @@ let xp = 0;
 let gold = 50;
 let health = 100;
 let currentWeaponIndex = 0;
+let currentMonsterRemainingHealth;
 let inventory = ["stick"];
 let currentMonster;
 let isEasy = false;
@@ -21,6 +22,8 @@ const healthText = document.querySelector("#healthText");
 const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealth = document.querySelector("#monsterHealth");
+
+//goldText.innerText = gold;
 
 /*  INITIAL BUTTON EVENT LISTENERS  */
 // button1.addEventListener("click", goStore);
@@ -255,9 +258,13 @@ function runGame() {
     monsterStats.style.display = "block";
     monsterHealth.innerText = currentMonster.health;
     monsterName.innerText = currentMonster.name;
+    currentMonsterRemainingHealth = currentMonster.health;
   }
 
   function getMonsterAttackValue() {
+    if(isEasy) {
+      return currentMonster.level;
+    }
     const hit = (currentMonster.level * 5) - (Math.floor(Math.random() * xp));
     return hit > 0 ? hit : currentMonster.level;
   }
@@ -274,9 +281,6 @@ function runGame() {
     text.innerText += ", You attack it with your " + currentWeapon.name + ".";
 
     health -= getMonsterAttackValue();
-
-    let currentMonsterRemainingHealth = currentMonster.health;
-
 
     if(isMonsterHit()) {
       currentMonsterRemainingHealth -= currentWeapon.power + Math.floor(Math.random() * xp + 1);
